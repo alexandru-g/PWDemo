@@ -16,46 +16,46 @@
 
 package com.pw.pwdemo.android.todo
 
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
-import com.pw.pwdemo.android.todo.TodoItem
+import com.pw.pwdemo.model.Task
+import com.pw.pwdemo.ui.ITasksViewModel
+import com.pw.pwdemo.ui.TasksViewModel
+import kotlinx.coroutines.flow.map
 
-class TodoViewModel : ViewModel() {
+class TodoViewModel : ViewModel(), ITasksViewModel by TasksViewModel() {
 
-    private var currentEditPosition by mutableStateOf(-1)
+    var todoItems = getTasks()
+        .map { domainList -> domainList.map { TodoItem(it.text, id = it.id) } }
+        .map { items -> items.map { if (it.id == currentEditItem.value?.id) currentEditItem.value!! else it } }
 
-    var todoItems = mutableStateListOf<TodoItem>()
-        private set
-
-    val currentEditItem: TodoItem?
-        get() = todoItems.getOrNull(currentEditPosition)
+    var currentEditItem = mutableStateOf<TodoItem?>(null)
 
     fun addItem(item: TodoItem) {
-        todoItems.add(item)
+
+        addTask(Task(id = item.id, item.task, false))
     }
 
     fun removeItem(item: TodoItem) {
-        todoItems.remove(item)
+        removeTask(item.id)
         onEditDone() // don't keep the editor open when removing items
     }
 
     fun onEditItemSelected(item: TodoItem) {
-        currentEditPosition = todoItems.indexOf(item)
+        currentEditItem.value = item
     }
 
     fun onEditDone() {
-        currentEditPosition = -1
+        currentEditItem.value?.let { updateTask(Task(id = it.id, it.task, false)) }
+
+        currentEditItem.value = null
     }
 
     fun onEditItemChange(item: TodoItem) {
-        val currentItem = requireNotNull(currentEditItem)
+        val currentItem = requireNotNull(currentEditItem.value)
         require(currentItem.id == item.id) {
             "You can only change an item with the same id as currentEditItem"
         }
-
-        todoItems[currentEditPosition] = item
+        currentEditItem.value = item
     }
 }

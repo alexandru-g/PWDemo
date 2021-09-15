@@ -22,6 +22,8 @@ import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.material.Surface
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import com.pw.pwdemo.android.ui.StateCodelabTheme
 
 class TodoActivity : AppCompatActivity() {
@@ -42,9 +44,10 @@ class TodoActivity : AppCompatActivity() {
 
 @Composable
 private fun TodoActivityScreen(todoViewModel: TodoViewModel) {
+    val items by todoViewModel.todoItems.collectAsState(initial = emptyList())
     TodoScreen(
-        items = todoViewModel.todoItems,
-        currentlyEditing = todoViewModel.currentEditItem,
+        items = items,
+        currentlyEditing = todoViewModel.currentEditItem.value,
         onAddItem = todoViewModel::addItem,
         onRemoveItem = todoViewModel::removeItem,
         onStartEdit = todoViewModel::onEditItemSelected,
