@@ -10,7 +10,7 @@ import Foundation
 class ToDoFormViewModel: ObservableObject {
     @Published var name = ""
     @Published var completed = false
-    var id: String?
+    var id: Int64?
     
     var updating: Bool {
         id != nil

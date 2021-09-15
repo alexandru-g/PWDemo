@@ -3,14 +3,15 @@ package com.pw.pwdemo.ui
 import com.pw.pwdemo.data.LocalRepository
 import com.pw.pwdemo.data.Repository
 import com.pw.pwdemo.model.Task
+import com.pw.pwdemo.util.MPFlow
+import com.pw.pwdemo.util.asMPFlow
 import kotlinx.coroutines.*
-import kotlinx.coroutines.flow.Flow
 
 interface ITasksViewModel {
 
     val coroutineScope: CoroutineScope
 
-    fun getTasks(): Flow<List<Task>>
+    fun getTasks(): MPFlow<List<Task>>
 
     fun addTask(task: Task)
 
@@ -25,8 +26,8 @@ class TasksViewModel(override val coroutineScope: CoroutineScope) : ITasksViewMo
 
     private val repository: Repository = LocalRepository()
 
-    override fun getTasks(): Flow<List<Task>> {
-        return repository.getTasks()
+    override fun getTasks(): MPFlow<List<Task>> {
+        return repository.getTasks().asMPFlow()
     }
 
     override fun addTask(task: Task) {

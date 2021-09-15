@@ -34,7 +34,7 @@ extension ToDoFormView {
     }
     
     func addToDo() {
-        let toDo = ToDo(name: formVM.name)
+        let toDo = ToDo(id: Int64.random(in: 1..<100000), name: formVM.name)
         dataStore.addToDo(toDo)
         presentationMode.wrappedValue.dismiss()
     }
