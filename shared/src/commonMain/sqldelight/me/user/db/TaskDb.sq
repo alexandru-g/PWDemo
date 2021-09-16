@@ -1,0 +1,17 @@
+CREATE TABLE task(
+    id INTEGER PRIMARY KEY NOT NULL,
+    text TEXT NOT NULL,
+    finished INTEGER NOT NULL
+);
+
+insertTask:
+INSERT OR REPLACE INTO task(id, text, finished) VALUES ?;
+
+getTasks:
+SELECT *FROM task;
+
+updateTask:
+UPDATE task SET text = :newText WHERE id = :id;
+
+deleteTask:
+DELETE FROM task WHERE id = :id;

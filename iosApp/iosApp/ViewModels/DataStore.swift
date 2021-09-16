@@ -6,8 +6,10 @@
 //
 
 import Foundation
+import shared
 
 class DataStore: ObservableObject {
+    
     @Published var toDos:[ToDo] = []
     
     init() {
